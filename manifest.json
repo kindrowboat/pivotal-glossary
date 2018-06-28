@@ -1,17 +1,19 @@
 {
-  "name": "PEDANT",
+  "name": "Pivotal Glossary",
   "version": "0.1",
   "description": "Glosses pages with definitions of acronyms",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
-  "options_page": "options.html",
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
+  "permissions": ["activeTab"],
   "content_scripts": [
     {
-      "matches": ["https://*/*", "http://*/*"],
-      "js": ["glossPage.js"]
+      "matches": [
+        "https://inbox.google.com/*",
+        "https://mail.google.com/*",
+        "https://github.com/*",
+        "https://*.slack.com/*",
+        "file://*"
+      ],
+      "js": ["glossPage.js"],
+      "css": ["annotation.css"]
     }
   ],
   "manifest_version": 2
