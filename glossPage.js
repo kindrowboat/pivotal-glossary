@@ -7,7 +7,22 @@ fetch('https://cf-glossary.cfapps.io/words.json')
   });
 
 function annotate(dictionary) {
-  const textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, null);
+  let textNodes;
+
+  if (location.href.includes('slack.com')) {
+    const slackFilter = (node) => {
+      if (node.parentElement.parentElement.classList.contains('ql-editor')) {
+        // slack: div.ql-editor contains p tags that are used for text input
+        return NodeFilter.FILTER_REJECT;
+      } else {
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    };
+
+    textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, slackFilter, null);
+  } else {
+    textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, null);
+  }
 
   const nodes = [];
   while (textNode = textNodes.nextNode()) {
