@@ -1,6 +1,6 @@
 {
   "name": "Pivotal Glossary",
-  "version": "0.1",
+  "version": "0.2",
   "description": "Glosses pages with definitions of acronyms",
   "permissions": ["activeTab"],
   "content_scripts": [
