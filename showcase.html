@@ -10,7 +10,20 @@
     text-decoration-line: none;
   }
 </style>
+<script>
+  function addAcronym() {
+    const pTag = document.createElement('p');
+    const childTextNode = document.createTextNode('UAA UAA UAA!')
+    const childPTag = document.createElement('p');
+    childPTag.textContent = 'CF CF CF!';
+    pTag.appendChild(childTextNode);
+    pTag.appendChild(childPTag);
+    document.body.appendChild(pTag);
+  }
+</script>
 <body>
+
+<button onclick="addAcronym()">MOAR</button>
 
 <p>PCF is a great thing.</p>
 <p>Run PCF run.</p>

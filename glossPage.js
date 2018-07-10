@@ -3,10 +3,20 @@ fetch('https://cf-glossary.cfapps.io/words.json')
     return response.json();
   })
   .then(dictionary => {
-    setInterval(() => { annotate(dictionary)}, 3000)
+    setTimeout(() => {
+      annotateTree(document.body, dictionary);
+      const observer = new MutationObserver((records => {
+        records.forEach(record => {
+          record.addedNodes.forEach(node => {
+            annotateTree(node, dictionary);
+          });
+        });
+      }));
+      observer.observe(document.body, { childList: true, subtree: true});
+    }, 1000);
   });
 
-function annotate(dictionary) {
+function annotateTree(rootNode, dictionary) {
   let textNodes;
 
   if (location.href.includes('slack.com')) {
@@ -19,9 +29,9 @@ function annotate(dictionary) {
       }
     };
 
-    textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, slackFilter, null);
+    textNodes = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, slackFilter, null);
   } else {
-    textNodes = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, null);
+    textNodes = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, null, null);
   }
 
   const nodes = [];
@@ -37,10 +47,9 @@ let ANNOTATION_TAG_NAME = "p-annotation";
 
 function annotateNode(node, dictionary) {
   let match = false;
-  if (node.parentElement.tagName === ANNOTATION_TAG_NAME) {
+  if (node.parentElement.tagName.toUpperCase() === ANNOTATION_TAG_NAME.toUpperCase()) {
     return;
   }
-
   const textContent = node.textContent;
   const replacementNodes = textContent.split(' ').reduce((nodes, word) => {
     const matchingEntry = dictionary[word.toLowerCase()];
